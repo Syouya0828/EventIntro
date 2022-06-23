@@ -122,10 +122,18 @@ $keywords = explode(',', $result["keywords"]);
             <?php endforeach; ?>
         </div>
         <div class="postComment">
+            <?php
+                if(!isset($_SESSION['csrfToken'])){
+                    $csrfToken = bin2hex(random_bytes(32));
+                    $_SESSION['csrfToken'] = $csrfToken;
+                }
+                $token = $_SESSION['csrfToken'];
+            ?>
             <form action="postComment.php" method="POST">
                 <p>コメント:</p>
                 <input type="text" name="comment">
                 <input type="hidden" name="eventid" value="<?=$id?>">
+                <input type="hidden" name="csrf" value="<?=$token?>">
                 <input type="submit" value="投稿">
             </form>
         </div>

@@ -26,35 +26,38 @@
 </head>
 <body>
     <?php 
+        if($_POST['csrf'] === $_SESSION['csrfToken']){
+            $comment = $_POST['comment'];
+            $id = $_POST['eventid'];
     
-        $comment = $_POST['comment'];
-        $id = $_POST['eventid'];
-
-        //テスト
-        $userid = 1;
-
-        // jsエラーメッセージをviewに表示させる
-        // コメントを登録する
-        // セキュリティーを設定
-        $dbh = dbConnect();
-        $dbh->beginTransaction();
-        try {
-            $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-            $sql = 'INSERT INTO comments(comment, eventid, userid) VALUES (:comment, :eventid, :userid)';
-            $stmt = $dbh->prepare($sql);
-            $stmt->bindValue(':comment',$comment, PDO::PARAM_STR);
-            $stmt->bindValue(':eventid',$id, PDO::PARAM_INT);
-            $stmt->bindValue(':userid',$userid, PDO::PARAM_INT);
-            $stmt->execute();
-            $dbh->commit();
-            $dbh = null;
-            header( "Location: view.php?commentPage=1&id=".$id );
-        } catch (PDOException $e) {
-            echo '接続失敗'.$e -> getMessage();
-            die();
+            //テスト
+            $userid = 1;
+    
+            // jsエラーメッセージをviewに表示させる
+            // コメントを登録する
+            // セキュリティーを設定
+            $dbh = dbConnect();
+            $dbh->beginTransaction();
+            try {
+                $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+                $sql = 'INSERT INTO comments(comment, eventid, userid) VALUES (:comment, :eventid, :userid)';
+                $stmt = $dbh->prepare($sql);
+                $stmt->bindValue(':comment',$comment, PDO::PARAM_STR);
+                $stmt->bindValue(':eventid',$id, PDO::PARAM_INT);
+                $stmt->bindValue(':userid',$userid, PDO::PARAM_INT);
+                $stmt->execute();
+                $dbh->commit();
+                $dbh = null;
+                unset($_SESSION['csrfToken']);
+                header( "Location: view.php?commentPage=1&id=".$id );
+            } catch (PDOException $e) {
+                echo '接続失敗'.$e -> getMessage();
+                die();
+            }
+            
         }
-        
+
     ?>
 </body>
 </html>
