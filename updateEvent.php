@@ -2,7 +2,7 @@
 require_once('functions.php');
 $id = $_POST['id'];
 $eventname = htmlspecialchars($_POST['eventname']);
-$eventdetail = htmlspecialchars($_POST['eventname']);
+$eventdetail = htmlspecialchars($_POST['eventdetail']);
 $place = htmlspecialchars($_POST['place']);
 $eventdate = htmlspecialchars($_POST['eventdate']);
 $capacity = htmlspecialchars($_POST['capacity']);
