@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./js/jquery-3.6.0.min.js"></script>
+    <script src="./js/garlic.js"></script>
+    <script src="./js/tagify.min.js"></script>
+    <script src="./js/tagify.polyfills.min.js"></script>
+    <link href="./css/tagify.css" rel="stylesheet" type="text/css" />
+    <!--<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+!-->
+
+    <title>Document</title>
+  </head>
+  <body>
+    <form data-persist="garlic" class="validationForm" action="event_create.php" method="POST">
+      <h1>イベントを作成</h1>
+      <p>
+        <p>タイトル</p>
+        <textarea name="title" cols="30" rows="2" placeholder="例： ○○募集 ××開催" ></textarea>
+      </p>
+      <p>
+        <p>イベント内容</p>
+        <textarea name="content" cols="50" rows="4" ></textarea>
+      </p>
+      <p>
+        <p>場所</p>
+        <input name="place" type="text" placeholder="例：京都コンピュータ学院" />
+      </p>
+      <p>
+        <p>日時</p>
+        <input name="date" type="date"  />
+      </p>
+      <p>
+        <p>参加人数</p>
+        <input name="capacity" type="text" />
+      </p>
+      <p>
+        <p for="keyword">キーワード</p>
+        <input id="keyword" name="keyword" class="keyword" type="text" /><br />
+      </p>
+      
+      <input type="submit" value="送信" />
+    </form>
+    <script>
+      //タグ機能
+    var inputInside = document.querySelector('input[name=keyword]');
+var tagifyInside = new Tagify(inputInside);
+//リロードしても入力内容保持
+$(function(){
+$("form").garlic();
+});
+    </script>
+  </body>
+</html>
