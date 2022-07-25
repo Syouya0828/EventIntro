@@ -1,7 +1,7 @@
 <?php
 require_once('dbc.php');
 $event = $_POST;
-$link_a = "./event_create.html";
+$link_a = "./event_createForm.html";
 $link_a_text = "戻る";
 
 
