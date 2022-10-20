@@ -18,12 +18,38 @@
 	<h2>検索画面</h2>
 	<form method='POST' action='searchEvent.php'>
 	<p>選択:<select name="search">
-		<option value="title">タイトル検索</option>
-		<option value="date">日付検索</option>
-		<option value="titleDate">タイトル・日付検索</option>
+	<?php
+	if(!empty($_GET['sHistory'])){//検索履歴の表示
+	    if($_GET['sHistory'] == "title"){
+	        print("<option value='title' selected>タイトル検索</option>");
+	    }else{
+	        print("<option value='title'>タイトル検索</option>");
+	    }
+	    if($_GET['sHistory'] == "date"){
+	        print("<option value='date' selected>日付検索</option>");
+	    }else{
+	        print("<option value='date'>日付検索</option>");
+	    }
+	    if($_GET['sHistory'] == "titleDate"){
+	        print("<option value='titleDate' selected>タイトル・日付検索</option>");
+	    }else{
+	        print("<option value='titleDate'>タイトル・日付検索</option>");
+	    }
+	}else{
+		print("<option value='title'>タイトル検索</option>");
+		print("<option value='date'>日付検索</option>");
+		print("<option value='titleDate'>タイトル・日付検索</option>");
+	}
+	?>
 	</select></p>
 	<p>日付:<input type="date" value="" name="searchDate" id="today"/>(日付から60日以内を検索します。)</p>
-	<p>タイトル:<input type="text" name="word"/>
+	<?php
+	if(!empty($_GET['sWord'])){//ワードの表示
+	   printf("<p>タイトル:<input type='text' name='word' value=%s>",htmlspecialchars($_GET['sWord']));
+	}else{
+	   print("<p>タイトル:<input type='text' name='word'/>");
+	}
+	?>
 	<input type='submit' value='検索'/></p>
 	</form>
 	<?php
@@ -51,7 +77,7 @@
 	getUserList();
 	if(!empty($_SESSION['searchResult'])){
 	   print('<table border="1" style="border-collapse: collapse">');
-	   printf("<tr><th>eventname</th><th>eventdate</th><th>username</th></tr>");
+	   print("<tr><th>eventname</th><th>eventdate</th><th>username</th></tr>");
 	   $nrows = count($_SESSION['searchResult']);
 	   $mrows = count($_SESSION['userlist']);
 	   for($i = 0; $i < $nrows; $i++){
