@@ -11,6 +11,9 @@ $db['dbname'] = "event_intro";  // データベース名
 // エラーメッセージの初期化
 $errorMessage = "";
 
+if(isset($_SESSION["userName"])){
+    header("Location: index.php");
+}
 // ログインボタンが押された場合
 if (isset($_POST["login"])) {
     // 1. ユーザIDの入力チェック
@@ -47,8 +50,11 @@ if (isset($_POST["login"])) {
                     foreach ($stmt as $row) {
                         $row['name'];  // ユーザー名
                     }
-                    $_SESSION["NAME"] = $row['username'];
-                    $_SESSION["userID"] = $row['username'];
+                    $_SESSION["userName"] = $row['username'];
+                    $_SESSION["userID"] = $row['id'];
+                    // echo($_SESSION["userName"]);
+                    // echo($_SESSION["userID"]);
+                    // var_dump($row);
                     header("Location: index.php");  // メイン画面へ遷移
                     exit();  // 処理終了
                 } else {

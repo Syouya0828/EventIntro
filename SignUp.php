@@ -12,6 +12,10 @@ $db['dbname'] = "event_intro";  // データベース名
 $errorMessage = "";
 $signUpMessage = "";
 
+//既にログインしている場合
+if(isset($_SESSION["userName"])){
+    header("Location: index.php");
+}
 // ログインボタンが押された場合
 if (isset($_POST["signUp"])) {
     // 1. ユーザIDの入力チェック
