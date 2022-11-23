@@ -3,7 +3,6 @@ session_start();
 
 /*
     TODO
-    ・ 参加表明を動くようにする
     ・コメントIDの上限が超えた場合のエラーページ遷移
     ・コメントをログインしていないとできないようにする
     ・
@@ -297,7 +296,7 @@ $keywords = explode(',', $result["keywords"]);
             <?php 
                 $count = countComments($id);
                 $countNum = $count["count(comments.comment)"];
-                $displayNum = 10;
+                $displayNum = 15;
                 $maxPage = ceil($countNum / $displayNum);
 
                 if($countNum > $displayNum):
