@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>仮題</title>
+<link href="search.css" rel="stylesheet">
 </head>
 <body>
 	<script type="text/javascript">//今日の日付を予めセット
@@ -16,7 +17,8 @@
   	}
 	</script>
 	<h2>検索画面</h2>
-	<form method='POST' action='searchEvent.php'>
+	<div id="main">
+	<form class="search" method='POST' action='searchEvent.php'>
 	<p>選択:<select name="search">
 	<?php
 	if(!empty($_GET['sHistory'])){//検索履歴の表示
@@ -76,8 +78,7 @@
 	}
 	getUserList();
 	if(!empty($_SESSION['searchResult'])){
-	   print('<table border="1" style="border-collapse: collapse">');
-	   print("<tr><th>eventname</th><th>eventdate</th><th>username</th></tr>");
+	   print('<table>');
 	   $nrows = count($_SESSION['searchResult']);
 	   $mrows = count($_SESSION['userlist']);
 	   for($i = 0; $i < $nrows; $i++){
@@ -87,14 +88,15 @@
 	               $username = $_SESSION["userlist"][$j]["username"];
 	           }
 	       }
-	       print('<tr>');
-	       printf("<td><p>%s</p></td>",$_SESSION['searchResult'][$i]['eventname']);
-	       printf("<td><p>%s</p></td>",$_SESSION['searchResult'][$i]['eventdate']);
-	       printf("<td><p>%s</p></td>",$username);
-	       print('</tr>');
+	       print('<tr><td>');
+	       printf("<p>%s</p>",$_SESSION['searchResult'][$i]['eventname']);
+	       printf("<p>%s</p>",$_SESSION['searchResult'][$i]['eventdate']);
+	       printf("<p>%s</p>",$username);
+	       print('</td></tr>');
 	   }
 	   print('</table>');
 	}
 	?>
+	</div>
 </body>
 </html>
