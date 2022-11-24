@@ -1,6 +1,12 @@
 <?php
     session_start();
 
+    if(!isset($_SESSION["userID"])){
+        header("Location: Error.php");
+    }
+
+    $userName = $_SESSION["userName"];
+    $userid = $_SESSION["userID"];
 
     function dbConnect(){//DB接続
         $user = "eventuser";
@@ -17,7 +23,7 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,12 +32,11 @@
 </head>
 <body>
     <?php 
+        //csrf対策 Tokenがあっているか調べる
         if($_POST['csrf'] === $_SESSION['csrfToken']){
             $comment = $_POST['comment'];
             $id = $_POST['eventid'];
     
-            //テスト
-            $userid = 1;
     
             // jsエラーメッセージをviewに表示させる
             // コメントを登録する
@@ -56,6 +61,9 @@
                 die();
             }
             
+        }else{
+            //Tokenがあってない場合
+            exit("エラー");
         }
 
     ?>
