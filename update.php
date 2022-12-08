@@ -22,7 +22,7 @@ function confirm_test(val) {
 	<h1>編集画面</h1>
 	<?php
 	printf("<input type='hidden' value=%d name='id'>",$_SESSION['list'][$_POST["i"]]['id']);
-	printf("<p><span>タイトル</span></p><textarea name='eventname'cols='50' rows='2' required>%s</textarea>",$_SESSION['list'][$_POST['i']]['eventname']);
+	printf("<p><span>タイトル</span></p><input type='text' value=%s name='eventname' required>",$_SESSION['list'][$_POST['i']]['eventname']);
 	printf("<p><span>イベント内容</span></p><textarea name='eventdetail' cols='50' rows='4' required>%s</textarea>",$_SESSION['list'][$_POST['i']]['eventdetail']);
 	printf("<p><span>場所</span></p><input type='text' value=%s name='place' required>",$_SESSION['list'][$_POST['i']]['place']);
 	printf("<p><span>日時</span></p><input type='date' value=%s name='eventdate' required>",$_SESSION['list'][$_POST['i']]['eventdate']);
