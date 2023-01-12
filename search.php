@@ -55,6 +55,9 @@
 	<input type='submit' value='検索'/></p>
 	</form>
 	<?php
+	if(!empty($_GET["err"])){
+	    print("<p class='err'>該当するイベントは見つかりませんでした。</p>");
+	};
 	session_start();
 	function getUserList(){
 	    function connectDB() {
