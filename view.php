@@ -8,7 +8,7 @@ session_start();
     ・
 */
 
-//SESSIONにデータがある場合
+///SESSIONにデータがある場合
 if(isset($_SESSION["userID"])){
     $userName = $_SESSION["userName"];
     $userID = $_SESSION["userID"];
