@@ -23,30 +23,39 @@ if($search == "date"){ //日付検索
     $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
     $_SESSION['searchResult'] = $result;
     $dbh = NULL;
-    header('Location: search.php?sHistory='.$search);
-    exit();
-}if(!empty($_POST["word"])){ //空の場合は検索しない
-    if($search == "title"){ //タイトル検索
-        $sql = ("SELECT * FROM events WHERE eventname LIKE '%".$word."%'");
-        $prepare = $dbh->prepare($sql);
-        $prepare->execute();
-        $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
-        $_SESSION['searchResult'] = $result;
-        $dbh = NULL;
-        header('Location: search.php?sHistory='.$search.'&sWord='.$word);
+    if(!empty($_SESSION['searchResult'])){
+        header('Location: search.php?sHistory='.$search);
         exit();
-    }elseif($search == "titleDate"){ //タイトル日付検索
-        $sql = ("SELECT * FROM events WHERE eventname LIKE '%".$word."%' AND eventdate BETWEEN '".$searchDate."' AND DATE_ADD('".$searchDate."', INTERVAL 60 DAY)");
-        $prepare = $dbh->prepare($sql);
-        $prepare->execute();
-        $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
-        $_SESSION['searchResult'] = $result;
-        $dbh = NULL;
-        header('Location: search.php?sHistory='.$search.'&sWord='.$word);
+    }else{
+        header('Location: search.php?sHistory='.$search.'&err=1');
         exit();
     }
-}else{
-    $_SESSION['searchResult'] = "";
+}elseif($search == "title"){ //タイトル検索
+    $sql = ("SELECT * FROM events WHERE eventname LIKE '%".$word."%'");
+    $prepare = $dbh->prepare($sql);
+    $prepare->execute();
+    $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
+    $_SESSION['searchResult'] = $result;
     $dbh = NULL;
-    header('Location: search.php?sHistory='.$search);
+    if(!empty($_SESSION['searchResult'])){
+        header('Location: search.php?sHistory='.$search.'&sWord='.$word);
+        exit();
+    }else{
+        header('Location: search.php?sHistory='.$search.'&sWord='.$word.'&err=1');
+        exit();
+    }
+}elseif($search == "titleDate"){ //タイトル日付検索
+    $sql = ("SELECT * FROM events WHERE eventname LIKE '%".$word."%' AND eventdate BETWEEN '".$searchDate."' AND DATE_ADD('".$searchDate."', INTERVAL 60 DAY)");
+    $prepare = $dbh->prepare($sql);
+    $prepare->execute();
+    $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
+    $_SESSION['searchResult'] = $result;
+    $dbh = NULL;
+    if(!empty($_SESSION['searchResult'])){
+        header('Location: search.php?sHistory='.$search.'&sWord='.$word);
+        exit();
+    }else{
+        header('Location: search.php?sHistory='.$search.'&sWord='.$word.'&err=1');
+        exit();
+    }
 }
