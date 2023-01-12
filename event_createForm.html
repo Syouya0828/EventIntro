@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./ckeditor/ckeditor.js"></script>
     <script src="./js/jquery-3.6.0.min.js"></script>
     <script src="./js/garlic.js"></script>
     <script src="./js/tagify.min.js"></script>
@@ -30,15 +31,10 @@
       <h1>イベントを作成</h1>
 
       <p><span>タイトル</span></p>
-      <textarea
-        name="title"
-        cols="50"
-        rows="2"
-        placeholder="例： ○○募集 ××開催"
-      ></textarea>
+      <input name="title" type="text" size="50" placeholder="例： ○○募集 ××開催">
 
       <p><span>イベント内容</span></p>
-      <textarea name="content" cols="50" rows="4"></textarea>
+      <textarea id="editor2" name="content" cols="50" rows="4"></textarea>
 
       <p><span>場所</span></p>
       <input
@@ -54,8 +50,8 @@
       <p><span>参加人数</span></p>
       <input name="capacity" type="text" />
 
-      <p for="keyword"><span>キーワード</span></p>
-      <input id="keyword" name="keyword" class="keyword" type="text" /><br />
+      <p for="keywords"><span>キーワード</span></p>
+      <input id="keywords" name="keywords" class="keywords" type="text" /><br />
 
       <input type="submit" value="送信" />
     </form>
@@ -63,9 +59,14 @@
   <hr>
   <h3>copyright omrn</h3>
 </footer>
-    <script>
+<script>
+  
+  CKEDITOR.replace( 'editor2' );
+  
+</script>
+<script>
       //タグ機能
-      var inputInside = document.querySelector("input[name=keyword]");
+      var inputInside = document.querySelector("input[name=keywords]");
       var tagifyInside = new Tagify(inputInside);
       //リロードしても入力内容保持
       $(function () {
