@@ -28,6 +28,9 @@ select:focus{
     border: 2px solid black;
     box-shadow: 0 0 10px 1px gray;
 }
+.err{
+	color: red;
+}
 input:focus{
     outline: none;
     border: 2px solid black;
