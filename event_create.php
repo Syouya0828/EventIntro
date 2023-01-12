@@ -4,8 +4,6 @@ $event = $_POST;
 $link_a = "./event_createForm.html";
 $link_a_text = "戻る";
 
-
-
 echo ($event['date']);
 if (empty($event['title'])) {
     echo "タイトルを入力してください<br/>";
@@ -31,6 +29,11 @@ if (empty($event['capacity'])) {
     exit ("<a href=". $link_a .">". $link_a_text ."</a>");
 }
 
+if (empty($event['keywords'])) {
+    echo "キーワードを入力してください<br/>";
+    exit ("<a href=". $link_a .">". $link_a_text ."</a>");
+}
+
 //SQLにデータを入れる
 $sql = 'INSERT INTO
             events(eventname, eventdetail, place, eventdate, capacity, keywords)
@@ -45,7 +48,7 @@ try {
     $stmt->bindValue(':place',$event['place'],PDO::PARAM_STR);
     $stmt->bindValue(':eventdate',$event['date'],PDO::PARAM_STR);
     $stmt->bindValue(':capacity',$event['capacity'],PDO::PARAM_STR);
-    $stmt->bindValue(':keywords',$event['title'],PDO::PARAM_STR);
+    $stmt->bindValue(':keywords',$event['keywords'],PDO::PARAM_STR);
     $stmt->execute();
     $dbh->commit();
     echo 'イベントを作成しました';
@@ -63,6 +66,8 @@ try {
     <title>Document</title>
 </head>
 <body>
-    <a href="./event_create.html">戻る</a>
+    <a href="./event_createForm.html">戻る</a>
+    
 </body>
+
 </html>
