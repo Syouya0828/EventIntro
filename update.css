@@ -1,0 +1,72 @@
+*{
+    box-sizing: border-box;
+}
+
+form {
+    text-align: center;
+    margin: 0 120px 50px;
+    padding-top: 20px;
+}
+
+h1 {
+    padding: 1rem 2rem;
+    color: #fff;
+    background: #094;
+    -webkit-box-shadow: 5px 5px 0 #007032;
+    box-shadow: 5px 5px 0 #007032;
+}
+p {
+    font-size: 15px;
+    font-size: 1.5rem;
+    position: relative;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+p span {
+    font-size: 9px;
+    font-size: 1.2rem;
+    display: block;
+}
+
+p:before {
+    position: absolute;
+    bottom: -10px;
+    left: calc(50% - 30px);
+    width: 60px;
+    height: 5px;
+    content: "";
+    border-radius: 3px;
+    background: blue;
+}
+.decoBtnUpd {
+    margin: 20px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px gray;
+    transition: 0.3s;
+}
+
+.decoBtnDel {
+    margin: 20px 10px;
+    background-color: orangered;
+    font-size: 12px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px gray;
+    transition: 0.3s;
+}
+
+.click-down:active {
+    transform: translateY(2px);
+    border-bottom: none;
+}
+
+.decoBtnUpd:hover {
+    background-color: gray;
+    color: whitesmoke;
+}
+
+.decoBtnDel:hover {
+    background-color: yellow;
+    color: red;
+}

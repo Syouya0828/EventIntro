@@ -4,8 +4,8 @@
     if($_POST['csrf'] === $_SESSION['csrfToken']){
         //POSTのデータを取ってくる
         $eventid = $_POST["eventid"];
-        //$userid = $_SESSION["userid"];
-        $userid = 1;
+        $userid = $_SESSION["userID"];
+        
     }else{
         exit("エラー");
     }
@@ -40,9 +40,8 @@
         }
     }
 
-    function updatePtState($result, $userid, $eventid){
+    function updatePtState($result, $eventid, $userid){
         $dbh = dbConnect();
-        $userid = 1;
         //参加表示しているかの確認
         if($result == NULL){//参加表示していない場合
             //INSERT

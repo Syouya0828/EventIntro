@@ -4,8 +4,8 @@
     if($_POST['csrf'] === $_SESSION['csrfToken']){
         //POSTのデータを取ってくる
         $eventid = $_POST["eventid"];
-        //$userid = $_SESSION['userid'];
-        $userid = 1;
+        $userid = $_SESSION['userID'];
+        // $userid = 1;
     }else{
         exit("エラー");
     }
@@ -38,9 +38,8 @@
             die();
         }
     }
-    function updatePtState($result, $userid, $eventid){
+    function updatePtState($result, $eventid, $userid){
         $dbh = dbConnect();
-        $userid = 1;
         //参加表示しているかの確認
         if($result == NULL){//参加表示していない場合
             //INSERT
@@ -65,7 +64,7 @@
             header( "Location: view.php?commentPage=1&id=".$eventid);
         }else{//参加表示している場合
             //UPDATE
-            $sql = "UPDATE ptstate SET state = :state WHERE userid = :userid AND eventid = :eventid";
+            $sql = "UPDATE ptstate SET state=:state WHERE userid = :userid AND eventid = :eventid";
             try {
                 $stmt = $dbh->prepare($sql);
                 $stmt->bindValue(':state', '1', PDO::PARAM_INT);
@@ -93,7 +92,9 @@
 </head>
 <body>
     <?php
+    echo($eventid);
     $result = getPtState($eventid, $userid);
+    var_dump($result);
     updatePtState($result, $eventid, $userid);
     //var_dump($result);
     ?>

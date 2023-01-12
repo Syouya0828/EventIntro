@@ -4,13 +4,16 @@
 session_start();
 
 $db['host'] = "localhost";  // DBサーバのURL
-$db['user'] = "hogeUser";  // ユーザー名
-$db['pass'] = "hogehoge";  // ユーザー名のパスワード
+$db['user'] = "eventuser";  // ユーザー名
+$db['pass'] = "omrn2022";  // ユーザー名のパスワード
 $db['dbname'] = "event_intro";  // データベース名
 
 // エラーメッセージの初期化
 $errorMessage = "";
 
+if(isset($_SESSION["userName"])){
+    header("Location: index.php");
+}
 // ログインボタンが押された場合
 if (isset($_POST["login"])) {
     // 1. ユーザIDの入力チェック
@@ -31,7 +34,7 @@ if (isset($_POST["login"])) {
         try {
             $pdo = new PDO($dsn, $db['user'], $db['pass'], array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
 
-            $stmt = $pdo->prepare('SELECT * FROM userData WHERE name = ?');
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ?');
             $stmt->execute(array($userid));
 
             $password = $_POST["password"];
@@ -42,13 +45,17 @@ if (isset($_POST["login"])) {
 
                     // 入力したIDのユーザー名を取得
                     $id = $row['id'];
-                    $sql = "SELECT * FROM userData WHERE id = $id";  //入力したIDからユーザー名を取得
+                    $sql = "SELECT * FROM users WHERE id = $id";  //入力したIDからユーザー名を取得
                     $stmt = $pdo->query($sql);
                     foreach ($stmt as $row) {
                         $row['name'];  // ユーザー名
                     }
-                    $_SESSION["NAME"] = $row['name'];
-                    header("Location: Main.php");  // メイン画面へ遷移
+                    $_SESSION["userName"] = $row['username'];
+                    $_SESSION["userID"] = $row['id'];
+                    // echo($_SESSION["userName"]);
+                    // echo($_SESSION["userID"]);
+                    // var_dump($row);
+                    header("Location: index.php");  // メイン画面へ遷移
                     exit();  // 処理終了
                 } else {
                     // 認証失敗
@@ -68,7 +75,7 @@ if (isset($_POST["login"])) {
     }
 }
 ?>
-<body bgcolor="lightsalmon"//背景をオレンジにしてる
+<body bgcolor="white"//背景をオレンジにしてる
 <!doctype html>
 <html>
     <head>

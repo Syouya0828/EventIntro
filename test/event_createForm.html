@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="../ckeditor/ckeditor.js"></script>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/garlic.js"></script>
+    <script src="../js/tagify.min.js"></script>
+    <script src="../js/tagify.polyfills.min.js"></script>
+    <link href="../css/tagify.css" rel="stylesheet" type="text/css" />
+    <link href="../css/event_createForm.css" rel="stylesheet" />
+
+    <title>イベント投稿</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-inner inner">
+        <h1 class="header-title"><a href="#">omrn</a></h1>
+        <nav class="header-nav">
+          <ul class="header-nav-list">
+            <li class="header-nav-item"><a class="header-nav-item-link" href="#">Home</a></li>
+            <li class="header-nav-item"><a class="header-nav-item-link" href="#">MyPage</a></li>
+            <li class="header-nav-item"><a class="header-nav-item-link" href="#">イベント投稿</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <form data-persist="garlic" class="validationForm" action="event_create.php" method="POST">
+      <h1>イベントを作成</h1>
+
+      <p><span>タイトル</span></p>
+      <input name="title" type="text" size="50" placeholder="例： ○○募集 ××開催">
+
+      <p><span>イベント内容</span></p>
+      <textarea id="editor2" name="content" cols="50" rows="4"></textarea>
+
+      <p><span>場所</span></p>
+      <input
+        name="place"
+        type="text"
+        size="50"
+        placeholder="例：京都コンピュータ学院"
+      />
+
+      <p><span>日時</span></p>
+      <input name="date" type="date" />
+
+      <p><span>参加人数</span></p>
+      <input name="capacity" type="text" />
+
+      <p for="keywords"><span>キーワード</span></p>
+      <input id="keywords" name="keywords" class="keywords" type="text" /><br />
+
+      <input type="submit" value="送信" />
+    </form>
+<footer>
+  <hr>
+  <h3>copyright omrn</h3>
+</footer>
+<script>
+  
+  CKEDITOR.replace( 'editor2' );
+  
+</script>
+<script>
+      //タグ機能
+      var inputInside = document.querySelector("input[name=keywords]");
+      var tagifyInside = new Tagify(inputInside);
+      //リロードしても入力内容保持
+      $(function () {
+        $("form").garlic();
+      });
+    </script>
+  </body>
+</html>
