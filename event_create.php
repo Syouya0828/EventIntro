@@ -1,6 +1,7 @@
 <?php
 require_once('dbc.php');
 $event = $_POST;
+//$event['capacity'] = mb_convert_kana($event['capacity'],'n','UTF-8');
 $link_a = "./event_createForm.html";
 $link_a_text = "戻る";
 
