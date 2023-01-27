@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <title>仮題</title>
 <link href="myImage.css" rel="stylesheet">
+<link rel="stylesheet" href="css/header.css">
 <script>
 function confirm_test() {
     var conf = confirm("更新します。よろしいですか？");
@@ -36,7 +37,13 @@ function imgPreView(event) {
 	<?php
 	session_start();
 	//test用
-	$_SESSION['userID'] = 1;
+	require_once("headerLogin.php");
+	if(isset($_SESSION["userID"]) ){
+        $userName = $_SESSION["userName"];
+        $userID = $_SESSION["userID"];
+    }else{
+        header("Location:Error.php");
+    }
 
 	function getUserList($id){
 	    function connectDB() {
@@ -60,6 +67,19 @@ function imgPreView(event) {
 	}
 	getUserList($_SESSION['userID']);
 	?>
+        <header>
+        <div class="logo">
+            <a href="index.php"><img src="logo/logo.png"></a>
+        </div>
+        <nav>
+            <ul class="nav_header">
+                <li>
+                    <a href="search.php">検索</a>
+                </li>
+                <?=$log?>
+            </ul>
+        </nav>
+    </header>
 	<form action='myImageUpdate.php' method='POST' enctype="multipart/form-data">
 	<h1>編集画面</h1>
 	<?php
@@ -75,5 +95,10 @@ function imgPreView(event) {
 	<br>
 	<input class="decoBtnUpd click-down" type='submit' name='update' value='更新実行' onClick="return confirm_test()">
 	</form>
+	<footer>
+        <p id="copy">
+            &copy;omrn
+        </p>
+    </footer>
 </body>
 </html>

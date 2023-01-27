@@ -1,0 +1,133 @@
+#event{
+    text-align: center;
+}
+#icon{
+    border-radius: 50%;
+}
+#username{
+    font-size: 10;
+}
+#user{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+#title{
+    padding: 10px;
+    border: solid 2px #93e6B4;
+    border-radius: 10px;
+    font-size: 30px;
+    /* background-color: #93e6B4; */
+    width: 35%;
+    margin: auto;
+}
+.holder{
+    font-size: 20px;
+    border-radius: 3px;
+    border-bottom: solid 3px #fa4141;
+    width: 100px;
+    margin: auto;
+}
+#btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#lists li{
+    border-top: solid 2px aliceblue;
+}
+.pt{
+    margin-right: 100px;
+    padding: 10px 30px;
+    background-color: white;
+    border: 1px solid #cdcddd;
+    border-radius: 10px;
+}
+.pt p{
+    margin: 0;
+    text-align: center;
+}
+.pt ul{
+    text-align: center;
+    padding: 0;
+}
+.pt li{
+    text-align: center;
+}
+.nopt{
+    padding: 10px 30px;
+    background-color: white;
+    border: 1px solid #cdcddd;
+    border-radius: 10px;
+}
+.nopt p{
+    margin: 0;
+    text-align: center;
+}
+.nopt ul{
+    text-align: center;
+    padding: 0;
+}
+.nopt li{
+    text-align: center;
+}
+.ptState{
+    padding-bottom: 10px;
+    border: solid 2px #93e6B4;
+    border-radius: 10px;
+    font-size:20px;
+    width: 20%;
+    margin: auto;
+    text-align: flex-start;
+    background-color: white;
+}
+.ptState p{
+    text-align: center;
+}
+.mapContent{
+    margin-bottom: 15px;
+}
+#lists{
+    margin: 15 0 15 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.comments{
+    text-align: center;
+}
+.date{
+    font-size: 7px;
+}
+#comments{
+    width: 250px;
+    border-bottom: solid 2px #cdcddd;
+    margin: 5 auto;
+}
+.postComment{
+    text-align: center;
+    margin-top: 20;
+}
+.postComment p{
+    text-align: center;
+    
+}
+.pt_btn{
+    padding: 10px 30px;
+    margin-right: 95px;
+    background-color: #3bb4ea;
+    border: none;
+    border-radius: 10px;
+}
+.nopt_btn{
+    padding: 10px 30px;
+    background-color: #fa4141;
+    border: none;
+    border-radius: 10px;
+}
+
+

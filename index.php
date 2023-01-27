@@ -1,13 +1,16 @@
 <?php 
 session_start();
+
+require_once("headerLogin.php");
 ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-  <link rel="stylesheet" href="mian.css">
+  <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="main_btn.css">
     <link rel="stylesheet" href="main_table.css">
+    <link rel="stylesheet" href="css/header.css">
   <title>タイトル</title>
 <?php
 ?>
@@ -15,30 +18,24 @@ session_start();
 <body>
 
 <header>
-    <h1>
-        <a href="/">タイトル</a>
-    </h1>
-    <nav class="pc-nav">
-        <ul>
-            <li><a href="index.php">ホーム</a></li>
-            <li><a href="searchEvent.php">検索</a></li>
-            <li><a href="event_createForm.html">募集</a></li>
-            <li><a href="mypage.php">マイページ</a></li>
-        </ul>
-    </nav>
-</header>
-<div class="pad"></div>
-<h2>サイトの紹介</h2>
-<p>ああああああああああ</p>    
-<div class="pad2"></div>
-<a href="Login.php" class="btn btn--orange btn-c">
-  <i class="fa far fa-envelope"></i>ログイン
-</a>
-<div class="pad3"></div>
-<a href="SignUp.php" class="btn btn--orange btn-c">
-  <i class="fa far fa-envelope"></i>会員登録
-</a>
-<br><br><br><br>
+        <div class="logo">
+            <a href="index.php"><img src="logo/logo.png"></a>
+        </div>
+        <nav>
+            <ul class="nav_header">
+                <li>
+                    <a href="search.php">検索</a>
+                </li>
+                <?=$log?>
+            </ul>
+        </nav>
+    </header>
+<div id="contents">
+  <h2>omrnはイベントの<span>告知</span>を行うサイトです！</h2>
+  <h2 class="second">今すぐ始めよう！！</h2>
+  <a class="signup"href="SignUp.php">新規登録</a>
+</div>
+<h2 class="recently">最近の投稿</h2>
 <table>
   <tr>
     <th class='title'>イベント</th>
@@ -46,7 +43,7 @@ session_start();
     <th class='place'>開催地</th>
     <th class='date'>日にち</th>
     <th class='cap'>募集人数</th>
-    <th class='key'>タグ</th>
+
   </tr>
   
 <?php
@@ -55,7 +52,7 @@ $username ='root';
 try{
   //期限切れは表示させない
   $dbh= new PDO($dsn,$username);
-  $sql='select * from events';
+  $sql='select * from events order by postdate DESC LIMIT 10';
   $sth =$dbh->prepare($sql);
   $sth->execute();
  $result = $sth->fetchAll();
@@ -71,7 +68,6 @@ foreach ($result as $row) {
         echo "<td class='place'>".$row['place']."</td>";
         echo "<td class='date'>".$row['eventdate']."</td>";
         echo "<td class='cap'>".$row['capacity']."</td>";
-        echo "<td class='key'>".$row['keywords']."</td>";
         echo "</tr>";
 }
 }
@@ -92,5 +88,10 @@ function insertStr($text, $insert, $num){
 }
 ?>
 </table>
+<footer>
+        <p id="copy">
+            &copy;omrn
+        </p>
+    </footer>
 </body>
 </html>

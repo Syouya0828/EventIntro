@@ -28,8 +28,7 @@ function getData(){
                     $(".event-"+i+" div").append("<a class='eventpage' href='/eventintro/view.php?commentPage=1&id="+result[i]["id"]+"'>"+result[i]["eventname"]+"</a>");
                     $(".event-"+i+" div").append("<p class='date'>開催日時: "+ result[i]["eventdate"].slice(0, -3) +"<p>");
 
-                    $(".event-"+i+" div").append("<a class='newupdatepage' href='/eventintro/update.php?id="+result[i]["id"]+"'>編集</a>");
-                    
+        
                 }
                 $("#result").append("<p>"+ result.value +"<p>");
             }else{

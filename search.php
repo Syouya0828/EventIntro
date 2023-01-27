@@ -1,8 +1,19 @@
+<?php
+session_start();
+// if(isset($_SESSION["userID"]) ){
+// 	$userName = $_SESSION["userName"];
+// 	$userID = $_SESSION["userID"];
+// }else{
+// 	//header("Location:Error.php");
+// }
+require("headerLogin.php");
+?>
 <!DOCTYPE HTML>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
 <title>仮題</title>
+<link rel="stylesheet" href="css/header.css">
 <link href="search.css" rel="stylesheet">
 </head>
 <body>
@@ -16,6 +27,19 @@
     	document.getElementById("today").value = yyyy + '-' + mm + '-' + dd;
   	}
 	</script>
+        <header>
+        <div class="logo">
+            <a href="index.php"><img src="logo/logo.png"></a>
+        </div>
+        <nav>
+            <ul class="nav_header">
+                <li>
+                    <a href="search.php">検索</a>
+                </li>
+                <?=$log?>
+            </ul>
+        </nav>
+    </header>
 	<h2>検索画面</h2>
 	<div id="main">
 	<form class="search" method='POST' action='searchEvent.php'>
@@ -58,7 +82,6 @@
 	if(!empty($_GET["err"])){
 	    print("<p class='err'>該当するイベントは見つかりませんでした。</p>");
 	};
-	session_start();
 	function getUserList(){
 	    function connectDB() {
 	        $param = 'mysql:dbname=event_intro;host=localhost';
@@ -89,17 +112,26 @@
 	       for($j = 0; $j < $mrows; $j++){
 	           if($_SESSION['searchResult'][$i]['userid'] === $_SESSION["userlist"][$j]["id"]){
 	               $username = $_SESSION["userlist"][$j]["username"];
+				   $userid = $_SESSION["userlist"][$j]["id"];
 	           }
 	       }
+		   
 	       print('<tr><td>');
-	       printf("<p>%s</p>",$_SESSION['searchResult'][$i]['eventname']);
-	       printf("<p>%s</p>",$_SESSION['searchResult'][$i]['eventdate']);
-	       printf("<p>%s</p>",$username);
+	       printf("<a href='view.php?commentPage=1&id=%s'>%s</a>",$_SESSION['searchResult'][$i]['id'], $_SESSION['searchResult'][$i]['eventname']);
+	       printf("<p>%s</p>",substr($_SESSION['searchResult'][$i]['eventdate'], 0, -3));
+	       printf("<a href='user.php?pageID=%s'>%s</a>", $userid, $username);
 	       print('</td></tr>');
 	   }
 	   print('</table>');
 	}
 	?>
+	
+	
 	</div>
+	<footer>
+        <p id="copy">
+            &copy;omrn
+        </p>
+    </footer>
 </body>
 </html>

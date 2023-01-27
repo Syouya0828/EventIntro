@@ -1,45 +1,21 @@
 <?php
+session_start();
+
 require_once('dbc.php');
+require_once("headerLogin.php");
 $event = $_POST;
 //$event['capacity'] = mb_convert_kana($event['capacity'],'n','UTF-8');
-$link_a = "./event_createForm.html";
+$link_a = "./event_createForm.php";
 $link_a_text = "戻る";
+$userID = $_SESSION["userID"];
 
-echo ($event['date']);
-if (empty($event['title'])) {
-    echo "タイトルを入力してください<br/>";
-    exit ("<a href=". $link_a .">". $link_a_text ."</a>");
-}
 
-if (empty($event['content'])) {
-    echo "内容を入力してください<br/>";
-    exit ("<a href=". $link_a .">". $link_a_text ."</a>");
-}
+$date = $event['date']." ".$event['time'];
 
-if (empty($event['place'])) {
-    echo "場所を入力してください<br/>";
-    exit ("<a href=". $link_a .">". $link_a_text ."</a>");
-}
-if (empty($event['date'])) {
-    echo "日付を入力してください<br/>";
-    exit ("<a href=". $link_a .">". $link_a_text ."</a>");
-}
-
-if (empty($event['capacity'])) {
-    echo "参加人数を入力してください<br/>";
-    exit ("<a href=". $link_a .">". $link_a_text ."</a>");
-}
-
-if (empty($event['keywords'])) {
-    echo "キーワードを入力してください<br/>";
-    exit ("<a href=". $link_a .">". $link_a_text ."</a>");
-}
-
-//SQLにデータを入れる
 $sql = 'INSERT INTO
-            events(eventname, eventdetail, place, eventdate, capacity, keywords)
+            events(eventname, eventdetail, place, lat, lng, eventdate, capacity, userid)
         VALUES
-            (:eventname, :eventdetail, :place, :eventdate, :capacity, :keywords)';
+            (:eventname, :eventdetail, :place, :lat, :lng, :eventdate, :capacity, :userid)';
 $dbh = dbConnect();
 $dbh->beginTransaction();
 try {
@@ -47,15 +23,17 @@ try {
     $stmt->bindValue(':eventname',$event['title'],PDO::PARAM_STR);
     $stmt->bindValue(':eventdetail',$event['content'],PDO::PARAM_STR);
     $stmt->bindValue(':place',$event['place'],PDO::PARAM_STR);
-    $stmt->bindValue(':eventdate',$event['date'],PDO::PARAM_STR);
+    $stmt->bindValue(':lat',$event['lat'],PDO::PARAM_STR);
+    $stmt->bindValue(':lng',$event['lng'],PDO::PARAM_STR);
+    $stmt->bindValue(':eventdate',$date,PDO::PARAM_STR);
     $stmt->bindValue(':capacity',$event['capacity'],PDO::PARAM_STR);
-    $stmt->bindValue(':keywords',$event['keywords'],PDO::PARAM_STR);
+    $stmt->bindValue(':userid',$userID,PDO::PARAM_INT);
+    //$stmt->bindValue(':keywords',$event['keywords'],PDO::PARAM_STR);
     $stmt->execute();
     $dbh->commit();
-    echo 'イベントを作成しました';
 } catch(PDOException $e){
     $dbh->rollBack();
-    exit($e);
+    header("Location: ErrorPage.php");
 }
 ?>
 <!DOCTYPE html>
@@ -64,10 +42,33 @@ try {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/result.css">
     <title>Document</title>
 </head>
 <body>
-    <a href="./event_createForm.html">戻る</a>
+<header>
+        <div class="logo">
+            <a href="index.php"><img src="logo/logo.png"></a>
+        </div>
+        <nav>
+            <ul class="nav_header">
+                <li>
+                    <a href="search.php">検索</a>
+                </li>
+                <?=$log?>
+            </ul>
+        </nav>
+    </header>
+    <div id="contents">
+        <p>イベントの作成が完了しました</p>
+        <a href="./event_createForm.php">戻る</a>
+    </div>
+    <footer>
+        <p id="copy">
+            &copy;omrn
+        </p>
+    </footer>
     
 </body>
 

@@ -1,7 +1,9 @@
 #map { 
+    text-align: center;
+    padding-left: 100px;
     height: 500px; 
     width: 500px; 
-    margin-bottom: 50px
+    margin: 0 auto;
 }
 
 #address{

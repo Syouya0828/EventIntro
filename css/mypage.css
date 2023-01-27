@@ -1,0 +1,34 @@
+.eventpage{
+    color: #93e6B4;
+    text-decoration: none;
+    font-size: 25px;
+}
+.contents{
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto 
+}
+.name{
+    font-size: 50px;
+}
+
+.event-body{
+    text-align: center;
+    border-bottom: solid #93e6B4 1px;
+}
+h1 {
+    padding: 1rem 2rem;
+    color: #fff;
+    background: #094;
+    -webkit-box-shadow: 5px 5px 0 #007032;
+    box-shadow: 5px 5px 0 #007032;
+    margin-bottom: 50;
+}
+
+.edit-profile{
+    margin-left: 80%;
+    color: white;
+    padding: 8 25;
+    background: #93e6B4;
+    border-radius: 10px;
+}

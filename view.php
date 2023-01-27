@@ -1,5 +1,11 @@
 <?php
 session_start();
+require_once("headerLogin.php");
+require_once "vendor/autoload.php";
+Dotenv\Dotenv::createImmutable(__DIR__)->load();
+
+$key = $_ENV['key'];
+
 
 /*
     TODO
@@ -79,7 +85,7 @@ function getUserData($id){//ユーザーのデータを取ってくる
         $dbh = dbConnect();
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-        $sql = 'SELECT id,username FROM users WHERE users.id=:id';
+        $sql = 'SELECT id,username,image_type FROM users WHERE users.id=:id';
         $stmt = $dbh->prepare($sql);
         $stmt->bindValue(':id',$id, PDO::PARAM_INT);
         $stmt->execute();
@@ -171,8 +177,8 @@ function getPtStateData($id, $ptState){
 
 
 }
-
 $result = getEventData($id);
+$userData = getUserData($result['userid']);
 //var_dump($result);
 $keywords = explode(',', $result["keywords"]);
 //var_dump($keyword);
@@ -180,23 +186,57 @@ $keywords = explode(',', $result["keywords"]);
 <!DOCTYPE html>
 <html lang="ja">
     <head>
+    <script src="http://maps.google.com/maps/api/js?key=<?=$key?>&language=ja"></script>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
         <title>イベント情報</title>
+        <link rel="stylesheet" href="css/header.css">
+        <link rel="stylesheet" href="css/view.css">
+        <link rel="stylesheet" href="css/GoogleMap.css">
     </head>
     <body>
         <!-- イベントの詳細 -->
+        <header>
+        <div class="logo">
+            <a href="index.php"><img src="logo/logo.png"></a>
+        </div>
+        <nav>
+            <ul class="nav_header">
+                <li>
+                    <a href="search.php">検索</a>
+                </li>
+                <?=$log?>
+            </ul>
+        </nav>
+    </header>
+        
         <div id="event">
-            <h1>イベント名:<?=h($result["eventname"])?></h1>
-            <h2>イベント日時:<?=h($result["eventdate"])?></h2>
-            <h2>イベント詳細:<?=h($result["eventdetail"])?></h2>
-            <h2>イベント場所:<?=h($result["place"])?></h2>
-            <h2>定員:<?=h($result["capacity"])?></h2>
-            <div class="keywords">
-            <?php foreach($keywords as $keyword): ?>
-                <div class="keyword"><?=$keyword?></div>
-            <?php endforeach; ?>
+            <p>イベント日時:<?=substr(h($result["eventdate"]), 0, -3)?></p>
+            <p id="title"><?=h($result["eventname"])?></p>
+            <div id="user">
+            
+                <?php
+                if($userData['image_type'] == NULL){
+                    echo('<img src="logo/user.png" width=35 height=35 alt="icon">');
+                }else{
+                    echo('<img id="icon"src="images.php?userID='.$result['userid'].'" width=35 height=35 alt="icon">');
+                }
+                ?>
+
+                <a id="username" href="user.php?pageID=<?=$userData['id']?>"><?=$userData['username']?></a>
+            </div>
+
+            <p class="holder">詳細</p>
+            <p><?=$result["eventdetail"]?></p>
+            <p class="holder">場所</p>
+            <p><?=h($result["place"])?></p>
+            <div class="mapContent"style="text-align:center;">
+                <div id="map"></div>
+            </div>
+            
         </div>
         
         <!-- 
@@ -213,22 +253,34 @@ $keywords = explode(',', $result["keywords"]);
 
         <div class="ptState">
             <!-- 参加 -->
-            <form action="participate.php" method="post">
-                <input type="hidden" name="eventid" value="<?=$id?>">
-                <input type="hidden" name="csrf" value="<?=$token?>">
-                <input class="state_btn" type="submit" value="参加する">
-            </form>
+            <p>イベントに参加しますか</p>
+            <div id="btn">
+                <?php
+                if(isset($_SESSION['userID'])){
+                    echo('                <form action="participate.php" method="post">
+                    <input type="hidden" name="eventid" value="'.$id.'">
+                    <input type="hidden" name="csrf" value="'.$token.'">
+                    <input class="pt_btn" type="submit" value="参加する">
+                </form>');
+                }
+                ?>
 
-
-            <ul>
+                <!-- 不参加 -->
+                <?php
+                if(isset($_SESSION['userID'])){
+                    echo('                 <form action="nonParticipate.php" method="post">
+                    <input type="hidden" name="eventid" value="'.$id.'">
+                    <input type="hidden" name="csrf" value="'.$token.'">
+                    <input class="nopt_btn" type="submit" value="参加しない">
+                </form>');
+                }
+                if(!isset($_SESSION['userID'])){
+                    echo('<p><span><a href="login.php">ログイン</a></span></p>');
+                }
+                ?>
                 
-            </ul>
-            <!-- 不参加 -->
-            <form action="nonParticipate.php" method="post">
-                <input type="hidden" name="eventid" value="<?=$id?>">
-                <input type="hidden" name="csrf" value="<?=$token?>">
-                <input class="state_btn" type="submit" value="参加しない">
-            </form>
+            </div>
+
             
 
             <!-- <form action="" method="post">
@@ -238,32 +290,35 @@ $keywords = explode(',', $result["keywords"]);
         </div>
 
         
-        
-        <div class="pt">
-            <p>参加する</p>
-            <!-- foreachで出力 -->
-            <ul>
-                <?php
-                foreach ($ptUsers as $ptUser) {
-                    $userData = getUserData($ptUser['userid']);
-                    //var_dump($userData);
-                    echo('<li>'.$userData['username'].'</li>');
-                }
-                ?>
-            </ul>
+        <div id="lists">
+            <div class="pt">
+                <p>参加者</p>
+                <!-- foreachで出力 -->
+                <ul>
+                    <?php
+                    foreach ($ptUsers as $ptUser) {
+                        $UserData = getUserData($ptUser['userid']);?>
+                        <li><a href="user.php?pageID=<?=$UserData['id']?>"><?=$UserData['username']?></a></li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+            <div class="nopt">
+                <p>不参加</p>
+                <ul>
+                    <?php
+                    foreach ($nonPtUsers as $nonPtUser) {
+                        $UserData = getUserData($nonPtUser['userid']);?>
+
+                        <li><a href="user.php?pageID=<?=$UserData['id']?>"><?=$UserData['username']?></a></li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
         </div>
-        <div class="nopt">
-            <p>参加しない</p>
-            <ul>
-                <?php
-                foreach ($nonPtUsers as $nonPtUser) {
-                    $userData = getUserData($nonPtUser['userid']);
-                    //var_dump($userData);
-                    echo('<li>'.$userData['username'].'</li>');
-                }
-                ?>
-            </ul>
-        </div>
+
         <!-- <div class=""></div> -->
         <!-- コメント投稿 -->
         <!-- 
@@ -271,13 +326,20 @@ $keywords = explode(',', $result["keywords"]);
             ログインしていないと投稿できない
         -->
         <div class="postComment">
-            <form action="postComment.php" method="POST">
-                <p>コメント:</p>
-                <input type="text" name="comment">
-                <input type="hidden" name="eventid" value="<?=$id?>">
-                <input type="hidden" name="csrf" value="<?=$token?>">
-                <input type="submit" value="投稿">
-            </form>
+        <?php
+                if(isset($_SESSION['userID'])){
+                    echo('            <form id="comment-form"action="postComment.php" method="POST">
+                    <p class="holder">コメント</p>
+                    <input id="postComment" type="text" name="comment"><br>
+                    <input type="hidden" name="eventid" value="'.$id.'">
+                    <input type="hidden" name="csrf" value="'.$token.'">
+                </form>
+                <input type="submit" id="commentBtn"value="投稿">');
+                }else{
+                    echo'<p>コメントするには<span><a href="login.php">ログイン</a></span>が必要です</p>';
+                }
+            ?>
+
         </div>
         
         <?php
@@ -288,10 +350,13 @@ $keywords = explode(',', $result["keywords"]);
         <!-- コメント表示 -->
         <div class="comments">
             <!-- 表示させるのは id コメント内容 時間 -->
-            <?php foreach($comments as $comment):?>
-                <div id="userID"></div>
-                <div id="date"><?=h($comment['postdate'])?></div>
-                <div id="comment"><?=h($comment['comment'])?></div>
+            <?php foreach($comments as $comment):
+                $UserData = getUserData($comment['userid']);
+                
+            ?>
+                <a href="user.php?pageID=<?=$UserData['id']?>"><?=$UserData['username']?></a>
+                <div class="date"><?=h($comment['postdate'])?></div>
+                <div class="comment"><?=h($comment['comment'])?></div>
             <?php endforeach; ?>
             <?php 
                 $count = countComments($id);
@@ -322,5 +387,46 @@ $keywords = explode(',', $result["keywords"]);
                     ?>
             
         </div>
+        <footer>
+        <p id="copy">
+            &copy;omrn
+        </p>
+    </footer>
+    <?php
+                if(isset($_SESSION['userID']) == NULL){
+                    echo('<script src="js/checkComment.js"></script>');
+                }
+            ?>
+        <script>
+
+        function generateMap(){
+            //最初のMap生生成
+            let firstLng = <?=$result["lng"]?>;
+			let firstLat = <?=$result["lat"]?>;
+            let FirstLatLng = new google.maps.LatLng(firstLat, firstLng);
+            let Options = {
+                zoom: 15,
+                center: FirstLatLng,
+                mapTypeId: 'roadmap'
+            };
+            map = new google.maps.Map(mapElement, Options);
+            marker = new google.maps.Marker({
+                position: FirstLatLng,
+                map: map,
+                draggable:false
+            })
+            geneMarker.setMap(geneMap);
+        }
+        // let inputAddress,
+        //     marker,
+        //     map,
+        //     latlng;
+        // let geocoder = new google.maps.Geocoder();
+        const mapElement = document.getElementById('map');
+
+        generateMap();
+
+        
+        </script>
     </body>
 </html>

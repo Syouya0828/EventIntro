@@ -1,0 +1,54 @@
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css?family=M+PLUS+1p');
+li{
+    list-style:none
+}
+html{
+    height: 100%;
+    font-family: 'M PLUS 1p', sans-serif;
+}
+body{
+    margin: 0;
+    background-color: #fffff2;
+}
+header{
+    height:80px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+}
+header nav{
+    margin:0 0 0 auto;
+}
+.logo img{
+    height:80px;
+}
+.nav_header{
+    display:flex;
+    align-items: center;
+    gap:40px;
+}
+.nav_header{
+    font-size: 20px;
+}
+a{
+    text-decoration: none;
+}
+header a{
+    color: #93e6B4;
+}
+
+footer{
+    margin-top: 100px;
+    box-sizing: border-box;
+    height: 50px;
+    width:100%;
+    background-color:#918d8b;
+    color:white;
+    bottom:0; 
+}
+#copy{
+    margin:10px;
+    float:right;
+}

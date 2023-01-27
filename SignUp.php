@@ -2,7 +2,11 @@
 
 // セッション開始
 session_start();
-
+require_once('dbc.php');
+if(isset($_SESSION["userID"]) ){
+    header("Location:index.php");
+}
+require_once("headerLogin.php");
 $db['host'] = "localhost";  // DBサーバのURL
 $db['user'] = "eventuser";  // ユーザー名
 $db['pass'] = "omrn2022";  // ユーザー名のパスワード
@@ -12,10 +16,6 @@ $db['dbname'] = "event_intro";  // データベース名
 $errorMessage = "";
 $signUpMessage = "";
 
-//既にログインしている場合
-if(isset($_SESSION["userName"])){
-    header("Location: index.php");
-}
 // ログインボタンが押された場合
 if (isset($_POST["signUp"])) {
     // 1. ユーザIDの入力チェック
@@ -40,13 +40,14 @@ if (isset($_POST["signUp"])) {
 
         // 3. エラー処理
         try {
-            $pdo = new PDO($dsn, $db['user'], $db['pass'], array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
+            $pdo = dbConnect();
 
             $stmt = $pdo->prepare("INSERT INTO users(username, mailaddress, password) VALUES (?, ?, ?)");
 
             $stmt->execute(array($username, $mailaddress, password_hash($password, PASSWORD_DEFAULT)));  // パスワードのハッシュ化
             $userid = $pdo->lastinsertid();
-            $signUpMessage = '登録が完了しました。';  // ログイン時に使用するIDとパスワード
+            $signUpMessage = '登録が完了しました。あなたは '. $userid. ' 番目に登録しました(^^♪パスワードは '. $password. ' です。ユーザー名とパスワードを忘れないようにしてください';  // ログイン時に使用するIDとパスワード
+            header("Location: Login.php");
         } catch (PDOException $e) {
             $errorMessage = 'データベースエラー';
           
@@ -56,34 +57,51 @@ if (isset($_POST["signUp"])) {
     }
 }
 ?>
-<body bgcolor="white"//背景をオレンジにしてる
-<!doctype html>
+
 <html>
     <head>
             <meta charset="UTF-8">
             <title>新規登録</title>
     </head>
     <body>
-        <h1>新規登録画面</h1>
+        <link rel="stylesheet" href="SignUp.css">
+        <link rel="stylesheet" href="css/header.css">
+        <header>
+        <div class="logo">
+            <a href="index.php"><img src="logo/logo.png"></a>
+        </div>
+        <nav>
+            <ul class="nav_header">
+                <li>
+                    <a href="search.php">検索</a>
+                </li>
+                <?=$log?>
+            </ul>
+        </nav>
+    </header>
         <form id="loginForm" name="loginForm" action="" method="POST">
-            <fieldset>
-                <legend>新規登録フォーム</legend>
+
+                <h4>新規登録フォーム</h4>
                 <div><font color="#ff0000"><?php echo htmlspecialchars($errorMessage, ENT_QUOTES); ?></font></div>
                 <div><font color="#0000ff"><?php echo htmlspecialchars($signUpMessage, ENT_QUOTES); ?></font></div>
-                <label for="username">ユーザー名</label><input type="text" id="username" name="username" placeholder="ユーザー名を入力" value="<?php if (!empty($_POST["username"])) {echo htmlspecialchars($_POST["username"], ENT_QUOTES);} ?>">
+                <label for="username"></label><input type="text" style="width: 700px; height: 50px; border: 2px solid #93e6B4; border-radius: 0.67em; padding: 0.5em; " id="username" name="username" placeholder="ユーザー名を入力" value="<?php if (!empty($_POST["username"])) {echo htmlspecialchars($_POST["username"], ENT_QUOTES);} ?>">
                 <br>
-                <label for="mailaddress">メールアドレス</label><input type="text" id="mailaddress" name="mailaddress" value="" placeholder="メールアドレスを入力">
+                <br><label for="mailaddress"></label><input type="text" style="width: 700px; height: 50px; border: 2px solid #93e6B4; border-radius: 0.67em; padding: 0.5em; " id="mailaddress" name="mailaddress" value="" placeholder="メールアドレスを入力してください">
                 <br>
-                <label for="password">パスワード</label><input type="password" id="password" name="password" value="" placeholder="パスワードを入力">
+                <br><label for="password"></label><input type="text" style="width: 700px; height: 50px; border: 2px solid #93e6B4; border-radius: 0.67em; padding: 0.5em; " id="password" name="password" value="" placeholder="パスワードを入力してください">
                 <br>
-                <label for="password2">パスワード(確認用)</label><input type="password" id="password2" name="password2" value="" placeholder="再度パスワードを入力">
+                <br><label for="password2"></label><input type="password" style="width: 700px; height: 50px; border: 2px solid #93e6B4; border-radius: 0.67em; padding: 0.5em; " id="password2" name="password2" value="" placeholder="再度パスワードを入力してください">
                 <br>
-                <input type="submit" id="signUp" name="signUp" value="新規登録">
-            </fieldset>
+                <h2><input type="submit" style="width: 200px; height: 50px;" id="signUp" name="signUp" value="新規登録"></h2>
         </form>
         <br>
         <form action="Login.php">
-            <input type="submit" value="ログイン">
+            <input type="submit" value="戻る">
         </form>
+        <footer>
+        <p id="copy">
+            &copy;omrn
+        </p>
+    </footer>
     </body>
 </html>

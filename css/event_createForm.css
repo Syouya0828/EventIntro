@@ -4,10 +4,16 @@
 
 form {
   text-align: center;
-  margin: 120px;
+  margin: 30px;
   padding-top: 20px;
 }
 
+form input{
+  width: 400px;
+  height: 50px;
+  border: 2px solid #93e6B4; 
+  border-radius: 0.67em;
+}
 a {text-decoration: none;}
 
 .inner {
@@ -77,21 +83,22 @@ h3{
     text-align: center;
 }
 
-p {
+.holder{
   font-size: 15px;
   font-size: 1.5rem;
   position: relative;
   padding: 0.5rem;
   text-align: center;
+  margin-bottom: 15px;
 }
 
-p span {
+.holder span {
   font-size: 9px;
   font-size: 1.2rem;
   display: block;
 }
 
-p:before {
+span:before {
   position: absolute;
   bottom: -10px;
   left: calc(50% - 30px);
@@ -100,4 +107,61 @@ p:before {
   content: "";
   border-radius: 3px;
   background: #fa4141;
+}
+#postBtn{
+  color: white;
+  width: 100px;
+  height: 50px;
+  background: #93e6B4;
+  border-radius: 10px;
+  text-align: center;
+  margin: auto;
+  border: none;
+}
+#postBtn:hover{
+  background: #93e6B4;
+  opacity: 80%;
+}
+
+.hide{
+  display: none;
+}
+#alert{
+  color: red;
+  text-align: center;
+  margin: auto;
+}
+.show{
+  display: hide;
+  text-align: center;
+}
+.center{
+  text-align: center;
+}
+.btns{
+  text-align: center;
+
+}
+
+
+#updateBtn{
+  margin-right: 20px;
+  width: 150px;
+  height: 50px;
+  background-color: aquamarine;
+  border-radius: 15px;
+  border: none;
+}
+#updateBtn:hover{
+  opacity: 80%;
+}
+#deleteBtn{
+  width: 150px;
+  height: 50px;
+  background-color: #fa4141;
+  border-radius: 15px;
+  border: none;
+}
+#deleteBtn:hover{
+  opacity: 80%;
 }

@@ -5,71 +5,32 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", メイリオ, Meiryo, "ＭＳ Ｐゴシック", "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-color: #e6e6e6;
 }
 
-header {
-    width: 100%;
-    padding: 30px 4% 10px;
-    background-color: #fff;
-    position: fixed;
-    top: 0;
-    display: flex;
-    align-items: center;
-}
-
-h1 {
-    margin: 0;
-    padding: 0;
-    font-size: 30px;
-}
-
-a {
-    text-decoration: none;
-    color: #4b4b4b;
-}
-
-ul {
-    list-style: none;
-    margin: 0;
-}
-
-ul {
-    list-style: none;
-    margin: 0;
-    display: flex;
-}
-
-li {
-    margin: 0 0 0 15px;
-    font-size: 14px;
-}
-
-nav {
-    margin: 0 0 0 auto;
-}
-
-div.pad {
-    padding-top: 100px;
-}
-
-div.pad2 {
-    padding-top: 100px;
-}
-
-div.pad3 {
-    padding-top: 20px;
-}
-
-h2 {
+#contents{
+    margin-top: 100px;
     text-align: center;
-    margin: 0;
-    padding: 0;
-    font-size: 22px;
+    font-size: 20px;
+}
+.second{
+    margin-bottom: 25px;
 }
 
-p {
+.signup{
+    background-color: #93e6B4;
+    color: white;
+    padding: 20px 80px;
+    margin-top: 25px;
+    border-radius: 15px;
+}
+
+.signup:hover{
+    opacity: 80%;
+}
+
+.recently{
+    margin-top: 100px;
     text-align: center;
-    font-size: 16px;
+    font-size: 25px;
 }

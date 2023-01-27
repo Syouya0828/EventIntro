@@ -1,47 +1,17 @@
 <?php
 session_start();
-
-require("dbc.php");
-require_once "vendor/autoload.php";
-require_once "headerLogin.php";
-if(isset($_SESSION["userID"]) && isset($_GET['id'])){
-    $userID = $_SESSION["userID"];
-    $id = $_GET['id'];
+require("headerLogin.php");
+if(isset($_SESSION["userID"]) ){
+  $userName = $_SESSION["userName"];
+  $userID = $_SESSION["userID"];
 }else{
-    header("Location:Error.php");
+  header("Location:Error.php");
 }
-
-
+require_once "vendor/autoload.php";
 
 Dotenv\Dotenv::createImmutable(__DIR__)->load();
 
 $key = $_ENV['key'];
-
-function getEvent($id){
-    try {
-        $dbh = dbConnect();
-        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-        $sql = "SELECT * FROM events WHERE id=:id";
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindValue(':id',$id, PDO::PARAM_STR);
-        $stmt->execute();
-        $event = $stmt->fetch(PDO::FETCH_ASSOC);
-        $dbh = NULL;
-        //var_dump($event);
-        return($event);
-    } catch (\Throwable $th) {
-        //throw $th;
-    }
-}
-
-$event = getEvent($id);
-$dateTime = explode(' ', $event["eventdate"]);
-$time = substr($dateTime[1], 0, -3);
-
-if($event["userid"] != $userID){
-    //header("Location:Error.php");
-}
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +29,7 @@ if($event["userid"] != $userID){
     <link rel="stylesheet" href="css/header.css">
 </head>
 <body>
-        <header>
+<header>
         <div class="logo">
             <a href="index.php"><img src="logo/logo.png"></a>
         </div>
@@ -72,15 +42,14 @@ if($event["userid"] != $userID){
             </ul>
         </nav>
     </header>
-    <form id="update-form" data-persist="garlic" class="validationForm" action="updateEvent.php" method="POST">
-		<input type="hidden" value="<?=$event["id"]?>"name="id">  
-		<h1>イベントを作成</h1>
+    <form id="post-form" data-persist="garlic" class="validationForm" action="event_create.php" method="POST">
+      <h1>イベントを作成</h1>
 
       <p class="holder"><span>イベント名</span></p>
-      <input id="title"name="title" type="text" size="50" placeholder="例： ○○募集 ××開催" value="<?=$event["eventname"]?>">
+      <input id="title"name="title" type="text" size="50" placeholder="例： ○○募集 ××開催">
 
       <p class="holder"><span>イベント内容</span></p>
-      <textarea id="content" name="content" cols="50" rows="4"><?=$event["eventdetail"]?></textarea>
+      <textarea id="content" name="content" cols="50" rows="4"></textarea>
 
       <p class="holder"><span>場所</span></p>
 
@@ -88,7 +57,7 @@ if($event["userid"] != $userID){
         <div id="map"></div>
       </div>
       
-        <input type="text" name="place" id="address" value="<?=$event['place']?>" placeholder="場所名か住所を入力/ピンの場所で保存されます"><br>
+        <input type="text" name="place" id="address" placeholder="場所名か住所を入力/ピンの場所で保存されます"><br>
         <!-- このボタンを押したら入力確認(nullだったら無視)⇒住所か場所の名前を検索 -->
         <button type="button" id="getAddress">ピンの住所を取得</button>
         <button type="button" id="search">住所から検索</button>
@@ -96,23 +65,21 @@ if($event["userid"] != $userID){
       <input type="hidden" name="lng" id="lng">
 
       <p><span class="holder">日時</span></p>
-      <input id="date" name="date" type="date" value="<?=$dateTime[0]?>"/>
+      <input id="date" name="date" type="date" />
       <div>
+
         <select name="time" id="time">
-        <?php
-            $selectTimes = array("00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30");
-                foreach ($selectTimes as $selectTime) {
-                    if($time == $selectTime){?>
-                    <option value="<?=$selectTime?>" selected><?=$selectTime?></option>
-            <?php   }?>
-                
-                    <option value="<?=$selectTime?>"><?=$selectTime?></option>
+            <?php
+            $times = array("00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30");
+                foreach ($times as $time) {?>
+                    <option value="<?=$time?>"><?=$time?></option>
             <?php }
             ?>
+          <!-- ">01:0001:30">01:3002:00">02:0002:30">02:3003:00">03:0003:30">03:3004:00">04:0004:30">04:3005:00">05:0005:30">05:3006:00">06:0006:30">06:3007:00">07:0007:30">07:3008:00">08:0008:30">08:3009:00">09:0009:30">09:3010:00">10:0010:30">10:3011:00">11:0011:30">11:3012:00">12:0012:30">12:3013:00">13:0013:30">13:3014:00">14:0014:30">14:3015:00">15:0015:30">15:3016:00">16:0016:30">16:3017:00">17:0017:30">17:3018:00">18:0018:30">18:3019:00">19:0019:30">19:3020:00">20:0020:30">20:3021:00">21:0021:30">21:3022:00">22:0022:30">22:3023:00">23:0023:30">23:30 -->
         </select>
       </div>
       <p><span class="holder">参加人数</span></p>
-      <input id="capacity"name="capacity" type="number" value = "<?=$event["capacity"]?>" min="1" placeholder="半角数字を入力" /><br> 
+      <input id="capacity"name="capacity" type="number" min="1" placeholder="半角数字を入力" /><br> 
       <!-- <p for="keywords"><span>キーワード</span></p>
       <input id="keywords" name="keywords" class="keywords" type="text" /><br /> -->
       <div id='alert'>
@@ -122,27 +89,22 @@ if($event["userid"] != $userID){
             <p id='emptyDate' class="hide">日にちを入力してください</p>
             <p id='emptyCapacity' class="hide">人数を入力してください</p>
         </div>
+
     </form>
-	<form action="delete.php" method="post" id="delete-form">
-		<input type="text" id="eventID" name="eventID" value="<?=$event["id"]?>">
-	</form>
-    <div class='btns'>
-        <input type="button" id="updateBtn" value="更新する">
-        <input type="button" id="deleteBtn" value="削除する" >
+    <div class="center">
+      <input id="postBtn" type="submit" value="投稿">
     </div>
+
     <footer>
         <p id="copy">
             &copy;omrn
         </p>
     </footer>
 
-
     <script>
         function generateMap(){
             //最初のMap生生成
-			let firstLng = <?=$event["lng"]?>;
-			let firstLat = <?=$event["lat"]?>;
-            let FirstLatLng = new google.maps.LatLng(firstLat, firstLng);
+            let FirstLatLng = new google.maps.LatLng(35.6809591, 139.7673068);
             let Options = {
                 zoom: 15,
                 center: FirstLatLng,
@@ -209,19 +171,9 @@ if($event["userid"] != $userID){
 
             })
         });
-		const deleteBtn = document.querySelector('#deleteBtn');
-        const updateBtn = document.querySelector('#updateBtn');
-		deleteBtn.addEventListener('click', ()=> {
-			var result = window.confirm("削除しますか？");
-            if(result){
-				// console.log("delete");
-                const form = document.getElementById('delete-form');
-                form.submit();
-            }
-		},false);
 
-
-        updateBtn.addEventListener('click', ()=> {
+        const post = document.querySelector('#postBtn');
+        post.addEventListener('click', ()=> {
             var title = document.getElementById('title').value;
             var content = document.getElementById('content').value;
             var address = document.getElementById('address').value;
@@ -268,7 +220,7 @@ if($event["userid"] != $userID){
             if(result){
                 $("#lat").val(lat);
                 $("#lng").val(lng);
-                const form = document.getElementById('update-form');
+                const form = document.getElementById('post-form');
                 form.submit();
             }
         }, false);

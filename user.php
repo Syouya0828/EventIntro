@@ -1,5 +1,8 @@
 <?php
     session_start();
+
+    require_once("headerLogin.php");
+    require_once("dbc.php");
 ?>
 <link rel="stylesheet" href="css/mypage.css">
 <link rel="stylesheet" href="css/header.css">
@@ -9,15 +12,39 @@
         $userName = $_SESSION["userName"];
         $userID = $_SESSION["userID"];
     }else{
+        //header("Location:Error.php");
+    }
+    if(isset($_GET['pageID'])){
+        $pageID = $_GET['pageID'];
+    }else{
         header("Location:Error.php");
     }
-    // if(isset($_GET['userID'])){
-    //     $pageID = $_GET['userID'];
-    // }else{
-    //     header("Location:Error.php");
-    // }
     
-    require_once("headerLogin.php");
+
+
+    function getUserData($id){//ユーザーのデータを取ってくる
+        try {
+            $dbh = dbConnect();
+            $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $sql = 'SELECT id,username FROM users WHERE users.id=:id';
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindValue(':id',$id, PDO::PARAM_INT);
+            $stmt->execute();
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+            $dbh = NULL;
+            return($userData);
+        } catch (PDOException $e) {
+            echo '接続失敗'.$e -> getMessage();
+            die();
+        }
+    }
+
+    $userData = getUserData($pageID);
+    //var_dump($userData);
+    if($userData == NULL){
+        header("Location:Error.php");
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +52,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="displayAjax.js"></script>
+    <script src="userAjax.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> 
     
     <title>Document</title>
@@ -44,9 +71,10 @@
             </ul>
         </nav>
     </header>
+    
     <div class="contents">
         <div class="profile">
-            <h1 class="name"><?=$userName?>さんのページ</h1>
+            <h1 class="name"><?=$userData["username"]?>さんのページ</h1>
             
         </div>
         <a href="myimage.php" class="edit-profile">プロフィール編集</a><br>
@@ -55,7 +83,7 @@
                 <option value="future">今後の予定</option>
                 <option value="past">過去の予定</option>
             </select>
-            <input id="userID"type="hidden" name="" value="<?=$userID?>">
+            <input id="userID"type="hidden" name="" value="<?=$userData["id"]?>">
             
         </form>
         

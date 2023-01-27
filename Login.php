@@ -2,6 +2,11 @@
 
 // セッション開始
 session_start();
+require_once("headerLogin.php");
+
+if(isset($_SESSION['userID'])){
+    header("Location: index.php");
+}
 
 $db['host'] = "localhost";  // DBサーバのURL
 $db['user'] = "eventuser";  // ユーザー名
@@ -11,9 +16,6 @@ $db['dbname'] = "event_intro";  // データベース名
 // エラーメッセージの初期化
 $errorMessage = "";
 
-if(isset($_SESSION["userName"])){
-    header("Location: index.php");
-}
 // ログインボタンが押された場合
 if (isset($_POST["login"])) {
     // 1. ユーザIDの入力チェック
@@ -52,9 +54,6 @@ if (isset($_POST["login"])) {
                     }
                     $_SESSION["userName"] = $row['username'];
                     $_SESSION["userID"] = $row['id'];
-                    // echo($_SESSION["userName"]);
-                    // echo($_SESSION["userID"]);
-                    // var_dump($row);
                     header("Location: index.php");  // メイン画面へ遷移
                     exit();  // 処理終了
                 } else {
@@ -75,32 +74,48 @@ if (isset($_POST["login"])) {
     }
 }
 ?>
-<body bgcolor="white"//背景をオレンジにしてる
-<!doctype html>
+
 <html>
     <head>
             <meta charset="UTF-8">
             <title>ログイン</title>
     </head>
     <body>
-        <h1>omrnログイン画面</h1>
+    <link rel="stylesheet" href="css/header.css">
+        <link rel="stylesheet" href="Login.css">
+        <header>
+        <div class="logo">
+            <a href="index.php"><img src="logo/logo.png"></a>
+        </div>
+        <nav>
+            <ul class="nav_header">
+                <li>
+                    <a href="search.php">検索</a>
+                </li>
+                <?=$log?>
+            </ul>
+        </nav>
+    </header>
         <form id="loginForm" name="loginForm" action="" method="POST">
-            <fieldset>
-                <legend>omrnログインフォーム</legend>
-                <div><font color="#ff0000"><?php echo htmlspecialchars($errorMessage, ENT_QUOTES); ?></font></div>
-                <label for="userid">ユーザーID</label><input type="text" id="userid" name="userid" placeholder="ユーザーIDを入力" value="<?php if (!empty($_POST["userid"])) {echo htmlspecialchars($_POST["userid"], ENT_QUOTES);} ?>">
+            
+                <h4>omrnログインフォーム</h4>
+               <div><font color="#ff0000"><?php echo htmlspecialchars($errorMessage, ENT_QUOTES); ?></font></div>
+              <label for="userid"></label><input type="text" style="width: 700px; height: 50px; border: 2px solid #93e6B4; border-radius: 0.67em; padding: 0.5em; " id="userid" name="userid" placeholder="ユーザー名を入力してください" value="<?php if (!empty($_POST["userid"])) {echo htmlspecialchars($_POST["userid"], ENT_QUOTES);} ?>">
                 <br>
-                <label for="password">パスワード</label><input type="password" id="password" name="password" value="" placeholder="パスワードを入力">
+                <h6><label for="password"></label><input type="password" style="width: 700px; height: 50px; border: 2px solid #93e6B4; border-radius: 0.67em; padding: 0.5em; " id="password" name="password" value="" placeholder="パスワードを入力"></h6>
                 <br>
-                <input type="submit" id="login" name="login" value="ログイン">
-            </fieldset>
+                <h2><input type="submit" style="width: 200px; height: 50px;"id="login" name="login" value="ログイン"></h2>
         </form>
         <br>
         <form action="SignUp.php">
-            <fieldset>          
-                <legend>新規登録フォーム</legend>
+                <h4>新規登録はこちら</h4>
                 <input type="submit" value="新規登録">
-            </fieldset>
+            
         </form>
+        <footer>
+        <p id="copy">
+            &copy;omrn
+        </p>
+    </footer>
     </body>
 </html>
